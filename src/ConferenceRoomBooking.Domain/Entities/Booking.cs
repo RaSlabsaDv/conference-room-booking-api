@@ -7,8 +7,8 @@ public class Booking
     public Money TotalPrice { get; private set; } = null!;
     public BookingStatus BookingStatus { get; private set; }
 
-    private readonly List<Service> _selectedServices = [];
-    public IReadOnlyCollection<Service> SelectedServices => _selectedServices;
+    private readonly List<BookedService> _selectedServices = [];
+    public IReadOnlyCollection<BookedService> SelectedServices => _selectedServices;
 
     private Booking() {}
 
@@ -34,21 +34,24 @@ public class Booking
     {
         if (BookingStatus == BookingStatus.Cancelled)
             throw new DomainException("Cannot edit cancelled booking");
-        
-        if (_selectedServices.Any(s => s.Id == service.Id))
+
+        if (service.RoomId != RoomId)
+            throw new DomainException($"Service '{service.Name}' does not belong to the booked room");
+
+        if (_selectedServices.Any(s => s.ServiceId == service.Id))
             throw new DomainException($"Service '{service.Name}' is already added to this booking");
 
-        _selectedServices.Add(service);
+        _selectedServices.Add(new BookedService(service));
     }
 
     public void RemoveService(Guid serviceId)
     {
         if (BookingStatus == BookingStatus.Cancelled)
             throw new DomainException("Cannot edit cancelled booking");
-    
-        var service = _selectedServices.FirstOrDefault(s => s.Id == serviceId)
+
+        var service = _selectedServices.FirstOrDefault(s => s.ServiceId == serviceId)
             ?? throw new DomainException("Service not found in this booking");
-    
+
         _selectedServices.Remove(service);
     }
 
