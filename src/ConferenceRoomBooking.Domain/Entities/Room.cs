@@ -17,7 +17,7 @@ public class Room
         if (string.IsNullOrWhiteSpace(name))
             throw new DomainException("Room name cannot be empty");
         if (capacity <= 0)
-            throw new DomainException("Room capacity must be grater than zero");
+            throw new DomainException("Room capacity must be greater than zero");
         
         Id = Guid.NewGuid();
         Name = name;
@@ -39,11 +39,15 @@ public class Room
         BaseHourlyRate = newRate ?? throw new ArgumentNullException(nameof(newRate));
     }
 
-    public void AddService(Service service)
+    public void AddService(string name, Money price)
     {
-        if (_services.Any(s => s.Name == service.Name))
-            throw new DomainException($"Service '{service.Name}' is already added");
-        
+        if (IsDeleted)
+            throw new DomainException("Cannot add service to a deleted room");
+
+        if (_services.Any(s => string.Equals(s.Name, name.Trim(), StringComparison.OrdinalIgnoreCase)))
+            throw new DomainException($"Service '{name}' is already added to this room");
+
+        var service = new Service(Id, name, price);
         _services.Add(service);
     }
 
