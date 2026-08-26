@@ -1,0 +1,8 @@
+<Solution>
+  <Folder Name="/src/">
+    <Project Path="src/ConferenceRoomBooking.API/ConferenceRoomBooking.API.csproj" />
+    <Project Path="src/ConferenceRoomBooking.Application/ConferenceRoomBooking.Application.csproj" />
+    <Project Path="src/ConferenceRoomBooking.Domain/ConferenceRoomBooking.Domain.csproj" />
+    <Project Path="src/ConferenceRoomBooking.Infrastructure/ConferenceRoomBooking.Infrastructure.csproj" />
+  </Folder>
+</Solution>
