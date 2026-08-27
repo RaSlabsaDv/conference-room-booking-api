@@ -14,8 +14,16 @@ public class Booking
 
     public Booking(Guid roomId, DateTime startTime, DateTime endTime)
     {
-        if(startTime >= endTime)
+        if (startTime >= endTime)
             throw new DomainException("End time must be after start time");
+
+        startTime = RoundToNearestBlock(startTime);
+        endTime = RoundToNearestBlock(endTime);
+
+        if (startTime >= endTime)
+            throw new DomainException("End time must be after start time");
+
+        ValidateWithinAllowedHours(startTime, endTime);
 
         Id = Guid.NewGuid();
         RoomId = roomId;
@@ -66,5 +74,21 @@ public class Booking
             throw new DomainException("Booking is already cancelled");
 
         BookingStatus = BookingStatus.Cancelled;
+    }
+
+    private static DateTime RoundToNearestBlock(DateTime time)
+    {
+        var roundedMinutes = time.Minute < 30 ? 0 : 30;
+        return new DateTime(time.Year, time.Month, time.Day, time.Hour, roundedMinutes, 0);
+    }
+
+    private static void ValidateWithinAllowedHours(DateTime startTime, DateTime endTime)
+    {
+        var start = TimeOnly.FromDateTime(startTime);
+        var end = TimeOnly.FromDateTime(endTime);
+
+        if (start < PricingRules.EarliestAllowed || end > PricingRules.LatestAllowed)
+            throw new DomainException(
+                $"Booking must be within allowed hours ({PricingRules.EarliestAllowed}–{PricingRules.LatestAllowed})");
     }
 }
