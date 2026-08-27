@@ -26,6 +26,14 @@ public class Room
         RoomStatus = RoomStatus.Active;
     }
 
+    public void Rename(string newName)
+    {
+        if (string.IsNullOrWhiteSpace(newName))
+            throw new DomainException("Room name cannot be empty");
+
+        Name = newName;
+    }
+
     public void UpdateCapacity(int newCapacity)
     {
         if (newCapacity <= 0)
