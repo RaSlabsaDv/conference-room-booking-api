@@ -14,6 +14,10 @@ public sealed class RoomConfiguration : IEntityTypeConfiguration<Room>
         builder.Property(r => r.Capacity)
             .IsRequired();
 
+        builder.Property(r => r.RoomStatus)
+            .HasConversion<string>()
+            .HasMaxLength(20);
+
         builder.ComplexProperty(r => r.BaseHourlyRate, price =>
         {
             price.Property(m => m.Amount)
@@ -29,15 +33,13 @@ public sealed class RoomConfiguration : IEntityTypeConfiguration<Room>
 
         builder.HasMany<Service>("_services")
             .WithOne()
-            .HasForeignKey("RoomId")
+            .HasForeignKey(s => s.RoomId)
             .OnDelete(DeleteBehavior.Cascade);
 
         builder.Navigation(r => r.Services)
             .UsePropertyAccessMode(PropertyAccessMode.Field)
             .HasField("_services");
 
-        builder.HasQueryFilter(r => !r.IsDeleted);
-
-
+        builder.HasQueryFilter(r => r.RoomStatus != RoomStatus.Deleted);
     }
 }

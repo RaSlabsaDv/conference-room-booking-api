@@ -4,7 +4,7 @@ public class Room
     public string Name { get; private set; } = string.Empty;
     public int Capacity { get; private set; }
     public Money BaseHourlyRate { get; private set; } = null!;
-    public bool IsDeleted { get; private set; }
+    public RoomStatus RoomStatus { get; private set; }
 
     private readonly List<Service> _services = [];
     public IReadOnlyCollection<Service> Services => _services;
@@ -23,7 +23,7 @@ public class Room
         Name = name;
         Capacity = capacity;
         BaseHourlyRate = baseHourlyRate ?? throw new ArgumentNullException(nameof(baseHourlyRate));
-        IsDeleted = false;
+        RoomStatus = RoomStatus.Active;
     }
 
     public void UpdateCapacity(int newCapacity)
@@ -41,13 +41,15 @@ public class Room
 
     public void AddService(string name, Money price)
     {
-        if (IsDeleted)
+        if (RoomStatus == RoomStatus.Deleted)
             throw new DomainException("Cannot add service to a deleted room");
-
-        if (_services.Any(s => string.Equals(s.Name, name.Trim(), StringComparison.OrdinalIgnoreCase)))
-            throw new DomainException($"Service '{name}' is already added to this room");
-
-        var service = new Service(Id, name, price);
+    
+        var trimmedName = name.Trim();
+    
+        if (_services.Any(s => string.Equals(s.Name, trimmedName, StringComparison.OrdinalIgnoreCase)))
+            throw new DomainException($"Service '{trimmedName}' is already added to this room");
+    
+        var service = new Service(Id, trimmedName, price);
         _services.Add(service);
     }
 
@@ -59,7 +61,23 @@ public class Room
         _services.Remove(service);
     }
 
-    public void MarkAsDeleted() => IsDeleted = true;
+    public void MarkAsDeleted() => RoomStatus = RoomStatus.Deleted;
 
-    public bool HasCapacityFor(int people) => !IsDeleted && Capacity >= people;
+    public bool HasCapacityFor(int people) => RoomStatus == RoomStatus.Active && Capacity >= people;
+
+    public void SetUnderMaintenance()
+    {
+        if(RoomStatus == RoomStatus.Deleted)
+            throw new DomainException("Cannot change status of deleted room");
+
+        RoomStatus = RoomStatus.UnderMaintenance;
+    }
+
+    public void Reactivate()
+    {
+        if(RoomStatus == RoomStatus.Deleted)
+            throw new DomainException("Cannot change status of deleted room");
+
+        RoomStatus = RoomStatus.Active;
+    }
 }
