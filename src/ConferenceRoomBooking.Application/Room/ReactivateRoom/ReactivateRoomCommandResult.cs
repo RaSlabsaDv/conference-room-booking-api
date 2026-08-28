@@ -1,0 +1,1 @@
+public sealed record ReactivateRoomCommandResult(Guid RoomId, string Status);

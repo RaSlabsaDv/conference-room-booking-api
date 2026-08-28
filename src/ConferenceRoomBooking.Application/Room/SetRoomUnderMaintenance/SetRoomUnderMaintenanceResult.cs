@@ -1,0 +1,1 @@
+public sealed record SetRoomUnderMaintenanceResult(Guid RoomId, string Status);
