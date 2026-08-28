@@ -52,4 +52,12 @@ public class BookingRepository(AppDbContext context) : IBookingRepository
                      && start < b.EndTime)
             .ToListAsync(ct);
     }
+
+    public async Task<bool> HasActiveFutureBookingsAsync(Guid roomId, CancellationToken ct = default)
+    {
+        return await context.Bookings
+            .AnyAsync(b => b.RoomId == roomId
+                        && b.BookingStatus == BookingStatus.Confirmed
+                        && b.EndTime > DateTime.UtcNow, ct);
+    }
 }

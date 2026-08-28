@@ -6,4 +6,5 @@ public interface IBookingRepository
     Task<List<Guid>> GetBusyRoomIdsAsync(DateTime start, DateTime end, CancellationToken ct = default);
     Task AddAsync(Booking booking, CancellationToken ct = default);
     Task<List<Booking>> GetAllAsync(CancellationToken ct = default);
+    Task<bool> HasActiveFutureBookingsAsync(Guid roomId, CancellationToken ct = default);
 }
