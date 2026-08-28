@@ -61,7 +61,7 @@ namespace ConferenceRoomBooking.Infrastructure.Migrations
 
                     b.HasIndex("RoomId");
 
-                    b.ToTable("Bookings");
+                    b.ToTable("Bookings", (string)null);
                 });
 
             modelBuilder.Entity("Room", b =>
@@ -100,7 +100,7 @@ namespace ConferenceRoomBooking.Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Rooms");
+                    b.ToTable("Rooms", (string)null);
                 });
 
             modelBuilder.Entity("Service", b =>
@@ -136,7 +136,7 @@ namespace ConferenceRoomBooking.Infrastructure.Migrations
 
                     b.HasIndex("RoomId");
 
-                    b.ToTable("Services");
+                    b.ToTable("Services", (string)null);
                 });
 
             modelBuilder.Entity("Booking", b =>
@@ -188,7 +188,7 @@ namespace ConferenceRoomBooking.Infrastructure.Migrations
 
                                     b2.HasKey("BookedServiceBookingId", "BookedServiceServiceId");
 
-                                    b2.ToTable("booking_services");
+                                    b2.ToTable("booking_services", (string)null);
 
                                     b2.WithOwner()
                                         .HasForeignKey("BookedServiceBookingId", "BookedServiceServiceId");
