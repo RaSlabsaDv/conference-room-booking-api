@@ -10,6 +10,9 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddApplication();
 builder.Services.AddInfrastructure(builder.Configuration);
 
+builder.Services.AddProblemDetails();
+builder.Services.AddExceptionHandler<ExceptionHandlingMiddleware>();
+
 var app = builder.Build();
 
 // Migrations + Seed
@@ -21,7 +24,7 @@ using (var scope = app.Services.CreateScope())
 }
 
 // Middleware pipeline
-app.UseMiddleware<ExceptionHandlingMiddleware>();
+app.UseExceptionHandler();
 
 if (app.Environment.IsDevelopment())
 {
