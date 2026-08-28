@@ -31,7 +31,7 @@ public sealed class RoomConfiguration : IEntityTypeConfiguration<Room>
                 .IsRequired();
         });
 
-        builder.HasMany<Service>("_services")
+        builder.HasMany(r => r.Services)
             .WithOne()
             .HasForeignKey(s => s.RoomId)
             .OnDelete(DeleteBehavior.Cascade);
