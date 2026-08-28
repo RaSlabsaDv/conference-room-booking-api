@@ -1,0 +1,1 @@
+public sealed record CancelBookingResult(Guid BookingId, string Status);

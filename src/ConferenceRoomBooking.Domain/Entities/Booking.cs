@@ -72,7 +72,10 @@ public class Booking
     {
         if (BookingStatus == BookingStatus.Cancelled)
             throw new DomainException("Booking is already cancelled");
-
+    
+        if (StartTime <= DateTime.UtcNow.AddHours(8))
+            throw new DomainException("Cannot cancel booking less than 8 hours before start time");
+    
         BookingStatus = BookingStatus.Cancelled;
     }
 
