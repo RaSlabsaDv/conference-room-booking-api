@@ -1,0 +1,1 @@
+public sealed record AddServiceRequest(string Name, decimal Price, string Currency);
