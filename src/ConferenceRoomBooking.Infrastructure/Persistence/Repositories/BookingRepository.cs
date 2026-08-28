@@ -60,4 +60,33 @@ public class BookingRepository(AppDbContext context) : IBookingRepository
                         && b.BookingStatus == BookingStatus.Confirmed
                         && b.EndTime > DateTime.UtcNow, ct);
     }
+
+    public async Task<decimal> GetRevenueAsync(DateTime from, DateTime to, CancellationToken ct = default)
+    {
+        return await context.Bookings
+            .Where(b => b.BookingStatus == BookingStatus.Confirmed
+                     && b.StartTime >= from
+                     && b.StartTime <= to)
+            .SumAsync(b => b.TotalPrice.Amount, ct);
+    }
+
+    public async Task<int> GetBookingsCountAsync(DateTime from, DateTime to, CancellationToken ct = default)
+    {
+        return await context.Bookings
+            .Where(b => b.BookingStatus == BookingStatus.Confirmed
+                     && b.StartTime >= from
+                     && b.StartTime <= to)
+            .CountAsync(ct);
+    }
+
+    public async Task<List<(Guid RoomId, DateTime StartTime, DateTime EndTime)>> GetBookingIntervalsAsync(
+        DateTime from, DateTime to, CancellationToken ct = default)
+    {
+        return await context.Bookings
+            .Where(b => b.BookingStatus == BookingStatus.Confirmed
+                     && b.StartTime >= from
+                     && b.StartTime <= to)
+            .Select(b => new ValueTuple<Guid, DateTime, DateTime>(b.RoomId, b.StartTime, b.EndTime))
+            .ToListAsync(ct);
+    }
 }
