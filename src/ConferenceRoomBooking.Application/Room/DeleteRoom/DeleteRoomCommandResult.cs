@@ -1,0 +1,1 @@
+public sealed record DeleteRoomCommandResult(Guid RoomId, string Status);
