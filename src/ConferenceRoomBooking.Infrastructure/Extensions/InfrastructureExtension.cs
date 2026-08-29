@@ -23,9 +23,6 @@ public static class InfrastructureExtension
         services.AddScoped<IBookingRepository, BookingRepository>();
         services.AddScoped<IServiceRepository, ServiceRepository>();
 
-        // Pricing provider
-        services.AddSingleton<IPricingRuleProvider, StaticPricingRuleProvider>();
-
         return services;
     }
 }

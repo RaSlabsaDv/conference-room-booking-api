@@ -19,6 +19,9 @@ public static class ApplicationExtensions
         // FluentValidation
         services.AddValidatorsFromAssembly(assembly);
 
+        // Static price provider
+        services.AddSingleton<IPricingRuleProvider, StaticPricingRuleProvider>();
+
         // Services
         services.AddScoped<IPricingCalculator, PricingCalculator>();
 
