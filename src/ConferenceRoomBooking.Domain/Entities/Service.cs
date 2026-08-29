@@ -17,6 +17,7 @@ public class Service
             throw new DomainException("Service price must be greater than zero");
         
         Id = Guid.NewGuid();
+        RoomId = roomId;
         Name = name;
         Price = price;
     }
